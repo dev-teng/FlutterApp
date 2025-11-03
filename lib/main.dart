@@ -514,9 +514,37 @@ class _HomeState extends State<Home> {
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
-                      setState(() {
-                        cart.removeAt(index);
-                      });
+                      // Show confirmation dialog
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('Remove Item'),
+                          content: Text('Are you sure you want to remove ${product['name']} from the cart?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close dialog
+                              },
+                              child: Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  cart.removeAt(index); // Remove item
+                                });
+                                Navigator.of(context).pop(); // Close dialog
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('${product['name']} removed from cart.'),
+                                    backgroundColor: Colors.redAccent,
+                                  ),
+                                );
+                              },
+                              child: Text('Delete', style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
                 );
